@@ -1,0 +1,158 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "contador",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "contratos",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "cliente",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "transportista",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "descripcion",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "peso",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fechaInicio",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fechaEntrega",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "completado",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_cliente",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_transportista",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_descripcion",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_peso",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fechaInicio",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fechaEntrega",
+						"type": "uint256"
+					}
+				],
+				"name": "crearContrato",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "marcarCompletado",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"TransporteContrato.sol": "TransporteContrato"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"TransporteContrato.sol": {
+			"keccak256": "0x1b67380e85a15f39d23f595710042724aacdca53173a1bc4afa2bd7b9eaae71d",
+			"urls": [
+				"bzz-raw://3f79833a56deb5bf8eb6064fa02ad2c44342f0ad63b499d7b305a3768f92a951",
+				"dweb:/ipfs/QmV1HTiSanVbgamVn6FuC381gKKv4iGmXC6E1ppi4bKkup"
+			]
+		}
+	},
+	"version": 1
+}
