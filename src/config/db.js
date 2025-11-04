@@ -11,6 +11,6 @@ const connection = await mysql.createConnection({
   port: process.env.DB_PORT || 3306,
 });
 
-console.log('✅ Conectado a la base de datos MySQL (modo promesas)');
+console.log('Conectado a la base de datos MySQL ');
 
 export default connection;
