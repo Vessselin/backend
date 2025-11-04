@@ -49,14 +49,14 @@ export const crearContratoBlockchain = async (req, res) => {
       return res.status(404).json({ success: false, message: "Negociación no encontrada" });
     }
 
-    // 🧭 Obtener datos de solicitud_carga (para origen y destino)
+    // Obtener datos de solicitud_carga (para origen y destino)
     const [solicitudRows] = await pool.query(
       "SELECT origen, destino FROM solicitud_carga WHERE idSolicitud_Carga = ?",
       [negociacion.idSolicitud_Carga]
     );
     const solicitud = solicitudRows[0] || {};
 
-    // 🧩 Traducir IDs de usuario a IDs de cliente/transportista reales
+    // Traducir IDs de usuario a IDs de cliente/transportista reales
     const [[cliente]] = await pool.query(
       "SELECT idCliente FROM cliente WHERE idUsuario = ?",
       [negociacion.idCliente]
@@ -86,7 +86,7 @@ export const crearContratoBlockchain = async (req, res) => {
       throw new Error("Bytecode del contrato no encontrado en TransporteContrato.json");
     }
 
-    // 🚀 Crear y desplegar el contrato en Ganache
+    // Crear y desplegar el contrato en Ganache
     const contratoInstance = new web3.eth.Contract(abi);
 
     const deployTx = contratoInstance.deploy({
@@ -115,7 +115,7 @@ export const crearContratoBlockchain = async (req, res) => {
     console.log("✅ Contrato desplegado en:", nuevoContrato.options.address);
 
 
-    // 💾 Guardar el contrato en la base de datos
+    // Guardar el contrato en la base de datos
     await pool.query(
       `INSERT INTO contrato 
        (idSolicitud_Carga, idCliente, idTransportista, fecha_inicio, valor_final, estado_contrato, hashBlockchain)
@@ -146,7 +146,7 @@ export const crearContratoBlockchain = async (req, res) => {
 };
 
 /**
- * 🔹 Obtener contratos por usuario
+ *  Obtener contratos por usuario
  */
 export const obtenerContratosPorUsuario = async (req, res) => {
   try {
@@ -168,7 +168,7 @@ export const obtenerContratosPorUsuario = async (req, res) => {
   }
 };
 
-// 🔹 Marcar contrato como completado
+//  Marcar contrato como completado
 export const completarContratoBlockchain = async (req, res) => {
   try {
     const { idContrato } = req.params;

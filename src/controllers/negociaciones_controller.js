@@ -42,7 +42,7 @@ export const crearNegociacion = async (req, res) => {
       idTransportista
     });
   } catch (err) {
-    console.error("❌ Error al crear negociación:", err);
+    console.error("Error al crear negociación:", err);
     return res.status(500).json({ error: "Error interno al crear negociación" });
   }
 };
@@ -81,7 +81,7 @@ export const actualizarNegociacion = async (req, res) => {
 
     return res.json({ success: true, message: "Negociación actualizada", affectedRows: result.affectedRows });
   } catch (err) {
-    console.error("❌ Error al actualizar negociación:", err);
+    console.error("Error al actualizar negociación:", err);
     return res.status(500).json({ error: "Error interno al actualizar negociación" });
   }
 };
@@ -127,7 +127,7 @@ export const pactarNegociacion = async (req, res) => {
       await connection.rollback();
       return res.status(409).json({
         success: false,
-        message: "❌ Esta carga ya fue tomada por otro transportista.",
+        message: "Esta carga ya fue tomada por otro transportista.",
       });
     }
 
@@ -173,7 +173,7 @@ export const pactarNegociacion = async (req, res) => {
       precio_final: negociacion.monto
     });
   } catch (err) {
-    console.error("❌ Error al pactar negociación:", err);
+    console.error("Error al pactar negociación:", err);
     try {
       await connection.rollback();
     } catch (e) {
@@ -213,7 +213,7 @@ export const obtenerNegociacionesPorCarga = async (req, res) => {
     const [rows] = await connection.execute(sql, [idSolicitud_Carga]);
     return res.json(rows);
   } catch (err) {
-    console.error("❌ Error al obtener negociaciones:", err);
+    console.error("Error al obtener negociaciones:", err);
     return res.status(500).json({ error: "Error al obtener negociaciones" });
   }
 };
@@ -248,7 +248,7 @@ export const obtenerNegociacionesPorTransportista = async (req, res) => {
     const [rows] = await connection.execute(sql, [idTransportista]);
     res.json(rows);
   } catch (err) {
-    console.error("❌ Error al obtener negociaciones del transportista:", err);
+    console.error("Error al obtener negociaciones del transportista:", err);
     res.status(500).json({ error: "Error al obtener negociaciones del transportista" });
   }
 };
@@ -265,9 +265,9 @@ export const enviarContraoferta = async (req, res) => {
     `;
     await connection.execute(sql, [nuevoMonto, idNegociacion]);
 
-    res.json({ success: true, message: "📩 Contraoferta enviada correctamente" });
+    res.json({ success: true, message: "Contraoferta enviada correctamente" });
   } catch (err) {
-    console.error("❌ Error al enviar contraoferta:", err);
+    console.error("Error al enviar contraoferta:", err);
     res.status(500).json({ error: "Error al enviar contraoferta" });
   }
 };
@@ -284,9 +284,9 @@ export const cancelarNegociacion = async (req, res) => {
     `;
     await connection.execute(sql, [idNegociacion]);
 
-    res.json({ success: true, message: "🚫 Negociación cancelada correctamente" });
+    res.json({ success: true, message: "Negociación cancelada correctamente" });
   } catch (err) {
-    console.error("❌ Error al cancelar negociación:", err);
+    console.error("Error al cancelar negociación:", err);
     res.status(500).json({ error: "Error al cancelar negociación" });
   }
 };
@@ -321,7 +321,7 @@ export const obtenerNegociacionesPorCliente = async (req, res) => {
     const [rows] = await connection.execute(sql, [idCliente]);
     res.json(rows);
   } catch (err) {
-    console.error("❌ Error al obtener negociaciones del cliente:", err);
+    console.error("Error al obtener negociaciones del cliente:", err);
     res.status(500).json({ error: "Error al obtener negociaciones del cliente" });
   }
 };
@@ -338,9 +338,9 @@ export const enviarContraofertaCliente = async (req, res) => {
     `;
     await connection.execute(sql, [nuevoMonto, idNegociacion]);
 
-    res.json({ success: true, message: "📩 Contraoferta enviada correctamente por el cliente" });
+    res.json({ success: true, message: "Contraoferta enviada correctamente por el cliente" });
   } catch (err) {
-    console.error("❌ Error al enviar contraoferta del cliente:", err);
+    console.error("Error al enviar contraoferta del cliente:", err);
     res.status(500).json({ error: "Error al enviar contraoferta del cliente" });
   }
 };
@@ -357,9 +357,9 @@ export const cancelarNegociacionCliente = async (req, res) => {
     `;
     await connection.execute(sql, [idNegociacion]);
 
-    res.json({ success: true, message: "🚫 Negociación cancelada correctamente por el cliente" });
+    res.json({ success: true, message: "Negociación cancelada correctamente por el cliente" });
   } catch (err) {
-    console.error("❌ Error al cancelar negociación del cliente:", err);
+    console.error("Error al cancelar negociación del cliente:", err);
     res.status(500).json({ error: "Error al cancelar negociación del cliente" });
   }
 };
