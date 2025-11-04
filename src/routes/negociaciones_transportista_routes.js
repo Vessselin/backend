@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-// 🔹 Rutas específicas para el transportista
+// Rutas específicas para el transportista
 router.get("/:idTransportista", obtenerNegociacionesPorTransportista);
 router.post("/contraoferta", enviarContraoferta);
 router.put("/cancelar/:idNegociacion", cancelarNegociacion);

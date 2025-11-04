@@ -3,6 +3,7 @@ import { getUsuarios, crearUsuario, getUsuarioById } from '../controllers/usuari
 
 const router = express.Router();
 
+// Rutas para la gestión de usuarios
 router.get('/', getUsuarios);
 router.post('/', crearUsuario);
 router.get('/:id', getUsuarioById);

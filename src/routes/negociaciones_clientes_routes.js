@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-// 🔹 Rutas específicas para el cliente
+// Rutas específicas para el cliente
 router.get("/:idCliente", obtenerNegociacionesPorCliente);
 router.post("/contraoferta", enviarContraofertaCliente);
 router.put("/cancelar/:idNegociacion", cancelarNegociacionCliente);

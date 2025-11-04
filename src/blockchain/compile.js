@@ -47,4 +47,4 @@ fs.writeFileSync(
   )
 );
 
-console.log("✅ Contrato compilado correctamente y guardado en build/TransporteContrato.json");
+console.log("Contrato compilado correctamente y guardado en build/TransporteContrato.json");

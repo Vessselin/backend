@@ -7,13 +7,9 @@ import {
 
 const router = express.Router();
 
-// Crear nuevo contrato
+// Rutas para la gestión de contratos en blockchain
 router.post("/contrato", crearContratoBlockchain);
-
-// Obtener todos los contratos de un usuario (cliente o transportista)
 router.get("/contratos/:tipo/:idUsuario", obtenerContratosPorUsuario);
-
-// Completar un contrato
 router.put("/contrato/:idContrato/completar", completarContratoBlockchain);
 
 export default router;

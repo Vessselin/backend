@@ -98,7 +98,7 @@ export const pactarNegociacion = async (req, res) => {
   try {
     await connection.beginTransaction();
 
-    // 🔹 Obtener la negociación con su monto
+    // Obtener la negociación con su monto
     const [[negociacion]] = await connection.execute(
       `SELECT idTransportista, idCliente, monto 
        FROM negociacion 
@@ -110,7 +110,7 @@ export const pactarNegociacion = async (req, res) => {
       throw new Error("No se encontró la negociación indicada");
     }
 
-    // 🔹 Obtener la solicitud
+    // Obtener la solicitud
     const [[solicitud]] = await connection.execute(
       `SELECT idTransportista, estado_carga 
        FROM solicitud_carga 
@@ -122,7 +122,7 @@ export const pactarNegociacion = async (req, res) => {
       throw new Error("No se encontró la solicitud de carga");
     }
 
-    // 🔹 Verificar si ya fue cerrada por otro transportista
+    // Verificar si ya fue cerrada por otro transportista
     if (solicitud.estado_carga === "cerrado" && solicitud.idTransportista !== negociacion.idTransportista) {
       await connection.rollback();
       return res.status(409).json({
@@ -131,7 +131,7 @@ export const pactarNegociacion = async (req, res) => {
       });
     }
 
-    // 🔹 Marcar la negociación ganadora
+    // Marcar la negociación ganadora
     await connection.execute(
       `UPDATE negociacion 
        SET estado = 'Pactado', fecha_actualizacion = NOW() 
@@ -139,7 +139,7 @@ export const pactarNegociacion = async (req, res) => {
       [idNegociacion]
     );
 
-    // 🔹 Cancelar las demás negociaciones
+    // Cancelar las demás negociaciones
     await connection.execute(
       `UPDATE negociacion 
        SET estado = 'Cancelado', fecha_actualizacion = NOW() 
@@ -147,7 +147,7 @@ export const pactarNegociacion = async (req, res) => {
       [idSolicitud_Carga, idNegociacion]
     );
 
-    // 🔹 Cerrar la solicitud y asignar transportista
+    // Cerrar la solicitud y asignar transportista
     await connection.execute(
       `UPDATE solicitud_carga 
        SET estado_carga = 'cerrado', idTransportista = ? 
@@ -155,7 +155,7 @@ export const pactarNegociacion = async (req, res) => {
       [negociacion.idTransportista, idSolicitud_Carga]
     );
 
-    // 🔹 Actualizar el precio final en la tabla precio_carga
+    // Actualizar el precio final en la tabla precio_carga
     await connection.execute(
       `UPDATE precio_carga 
        SET precio_final = ? 
@@ -218,7 +218,7 @@ export const obtenerNegociacionesPorCarga = async (req, res) => {
   }
 };
 
-// 🔹 Negociaciones del transportista
+// Negociaciones del transportista
 export const obtenerNegociacionesPorTransportista = async (req, res) => {
   try {
     const { idTransportista } = req.params;
@@ -253,7 +253,7 @@ export const obtenerNegociacionesPorTransportista = async (req, res) => {
   }
 };
 
-// 🔹 Contraoferta (transportista)
+// Contraoferta (transportista)
 export const enviarContraoferta = async (req, res) => {
   try {
     const { idNegociacion, nuevoMonto } = req.body;
@@ -272,7 +272,7 @@ export const enviarContraoferta = async (req, res) => {
   }
 };
 
-// 🔹 Cancelar (transportista)
+// Cancelar (transportista)
 export const cancelarNegociacion = async (req, res) => {
   try {
     const { idNegociacion } = req.params;

@@ -1,6 +1,6 @@
 import db from '../config/db.js';
 
-// 🔹 Obtener solicitudes disponibles (solo las que no estén cerradas)
+// Obtener solicitudes disponibles (solo las que no estén cerradas)
 export const obtenerSolicitudesDisponibles = async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -28,7 +28,7 @@ export const obtenerSolicitudesDisponibles = async (req, res) => {
   }
 };
 
-// 🔹 Crear una nueva oferta o contraoferta
+// Crear una nueva oferta o contraoferta
 export const crearOferta = async (req, res) => {
   try {
     const { idSolicitud_Carga, idTransportista, monto, comentarios, tipo } = req.body;
@@ -41,21 +41,21 @@ export const crearOferta = async (req, res) => {
       VALUES (?, ?, ?, ?, ?, NOW())
     `, [idSolicitud_Carga, idTransportista, monto, estado, comentarios]);
 
-    res.json({ message: '✅ Oferta creada exitosamente' });
+    res.json({ message: 'Oferta creada exitosamente' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al crear la oferta' });
   }
 };
 
-// 🔹 Aceptar una oferta
+// Aceptar una oferta
 export const aceptarOferta = async (req, res) => {
   try {
     const { idOferta } = req.params;
 
     await db.query(`UPDATE oferta SET estado = 'Aceptada' WHERE idOferta = ?`, [idOferta]);
 
-    res.json({ message: '✅ Oferta aceptada correctamente' });
+    res.json({ message: 'Oferta aceptada correctamente' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al aceptar la oferta' });

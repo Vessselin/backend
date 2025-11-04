@@ -38,7 +38,7 @@ export const crearContratoBlockchain = async (req, res) => {
       return res.status(400).json({ success: false, message: "Falta idNegociacion" });
     }
 
-    // 🔍 Obtener negociación desde la base de datos
+    // Obtener negociación desde la base de datos
     const [rows] = await pool.query(
       "SELECT * FROM negociacion WHERE idNegociacion = ?",
       [idNegociacion]
@@ -73,7 +73,7 @@ export const crearContratoBlockchain = async (req, res) => {
       });
     }
 
-    // 🔧 Cargar ABI y bytecode del contrato dentro de la función
+    // Cargar ABI y bytecode del contrato dentro de la función
     const contractPath = path.resolve("./src/contracts/build/TransporteContrato.json");
     const contractJSON = JSON.parse(fs.readFileSync(contractPath, "utf8"));
     const abi = contractJSON.abi;
@@ -109,10 +109,10 @@ export const crearContratoBlockchain = async (req, res) => {
         })
         .on("transactionHash", (hash) => {
             transactionHashValue = hash;
-            console.log("🔗 Tx Hash:", hash);
+            console.log("Tx Hash:", hash);
         });
 
-    console.log("✅ Contrato desplegado en:", nuevoContrato.options.address);
+    console.log("Contrato desplegado en:", nuevoContrato.options.address);
 
 
     // Guardar el contrato en la base de datos
@@ -136,7 +136,7 @@ export const crearContratoBlockchain = async (req, res) => {
       txHash: transactionHashValue,
     });
   } catch (error) {
-    console.error("❌ Error al crear contrato:", error);
+    console.error("Error al crear contrato:", error);
     res.status(500).json({
       success: false,
       message: "Error al crear contrato en blockchain",
@@ -163,7 +163,7 @@ export const obtenerContratosPorUsuario = async (req, res) => {
       contratos,
     });
   } catch (err) {
-    console.error("❌ Error al obtener contratos por usuario:", err);
+    console.error("Error al obtener contratos por usuario:", err);
     res.status(500).json({ error: "Error al obtener contratos del usuario" });
   }
 };
@@ -173,7 +173,7 @@ export const completarContratoBlockchain = async (req, res) => {
   try {
     const { idContrato } = req.params;
 
-    // 🔗 Simula llamada al contrato inteligente (en Ganache)
+    // Simula llamada al contrato inteligente en Ganache
     const tx = await contrato.methods
       .completarContrato(idContrato)
       .send({ from: defaultAccount, gas: 200000 });
@@ -186,11 +186,11 @@ export const completarContratoBlockchain = async (req, res) => {
 
     res.json({
       success: true,
-      message: "✅ Contrato completado correctamente",
+      message: "Contrato completado correctamente",
       txHash: tx.transactionHash,
     });
   } catch (err) {
-    console.error("❌ Error al completar contrato:", err);
+    console.error("Error al completar contrato:", err);
     res.status(500).json({ error: "Error al completar contrato" });
   }
 };

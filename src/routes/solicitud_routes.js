@@ -9,16 +9,10 @@ import {
 
 const router = express.Router();
 
-// Crear nueva solicitud
+// Rutas para la gestión de solicitudes
 router.post("/crear", crearSolicitud);
-
-// Obtener solicitudes por cliente
 router.get("/cliente/:idUsuario", obtenerSolicitudesPorCliente);
-
-// Obtener solicitudes por transportista
 router.get("/transportista/:idTransportista", obtenerSolicitudesPorTransportista);
-
-// Cancelar solicitud
 router.put("/cancelar/:idSolicitud_Carga", cancelarSolicitud);
 
 export default router;

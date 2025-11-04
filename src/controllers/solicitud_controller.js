@@ -17,16 +17,16 @@ export const crearSolicitud = async (req, res) => {
       idUsuario
     } = req.body;
 
-    // 1️⃣ Calcular precio estimado en el backend
+    // Calcular precio estimado en el backend
     const precioKm = 950;
     const precioKg = 1500;
     const precioEstimado = (distancia_km * precioKm) + (peso * precioKg);
 
-    // 2️⃣ Calcular rango permitido
+    // Calcular rango permitido
     const precioMin = precioEstimado * 0.9;
     const precioMax = precioEstimado * 1.1;
 
-    // 3️⃣ Validar que el usuario esté dentro del rango permitido
+    // Validar que el usuario esté dentro del rango permitido
     const precioFinal = parseFloat(precio_usuario);
     if (precioFinal < precioMin || precioFinal > precioMax) {
       return res.status(400).json({
@@ -34,7 +34,7 @@ export const crearSolicitud = async (req, res) => {
       });
     }
 
-    // 4️⃣ Crear solicitud
+    // Crear solicitud
     const [solicitud] = await db.query(
       `INSERT INTO solicitud_carga 
        (descripcion, peso, origen, destino, origen_lat, origen_lng, destino_lat, destino_lng, distancia_km, idUsuario, fecha_publicacion)
@@ -55,7 +55,7 @@ export const crearSolicitud = async (req, res) => {
 
     const idSolicitud = solicitud.insertId;
 
-    // 5️⃣ Registrar precios (estimado, rango y precio ingresado)
+    // Registrar precios (estimado, rango y precio ingresado)
     await db.query(
       `INSERT INTO precio_carga (idSolicitud_Carga, precio_estimado, precio_min, precio_max, precio_final)
        VALUES (?, ?, ?, ?, ?)`,
@@ -63,7 +63,7 @@ export const crearSolicitud = async (req, res) => {
     );
 
     res.json({
-      message: "✅ Solicitud creada correctamente",
+      message: "Solicitud creada correctamente",
       data: {
         idSolicitud,
         precio_estimado: precioEstimado,
@@ -74,7 +74,7 @@ export const crearSolicitud = async (req, res) => {
 
   } catch (error) {
     console.error("Error al crear solicitud:", error);
-    res.status(500).json({ message: "❌ Error al crear la solicitud" });
+    res.status(500).json({ message: "Error al crear la solicitud" });
   }
 };
 
@@ -113,7 +113,7 @@ export const obtenerSolicitudesPorCliente = async (req, res) => {
 
     res.json(rows);
   } catch (error) {
-    console.error("❌ Error al obtener solicitudes del cliente:", error);
+    console.error("Error al obtener solicitudes del cliente:", error);
     res.status(500).json({ message: "Error al obtener solicitudes del cliente" });
   }
 };
@@ -154,7 +154,7 @@ export const obtenerSolicitudesPorTransportista = async (req, res) => {
 
     res.json(rows);
   } catch (error) {
-    console.error("❌ Error al obtener cargas del transportista:", error);
+    console.error("Error al obtener cargas del transportista:", error);
     res.status(500).json({ message: "Error al obtener cargas del transportista" });
   }
 };
@@ -175,15 +175,15 @@ export const cancelarSolicitud = async (req, res) => {
     if (solicitud.estado_carga !== "disponible") {
       return res
         .status(400)
-        .json({ message: "❌ Solo se pueden cancelar solicitudes disponibles." });
+        .json({ message: "Solo se pueden cancelar solicitudes disponibles." });
     }
     await connection.query(
       "UPDATE solicitud_carga SET estado_carga = 'cancelado' WHERE idSolicitud_Carga = ?",
       [idSolicitud_Carga]
     );
-    res.json({ success: true, message: "🚫 Solicitud cancelada correctamente." });
+    res.json({ success: true, message: "Solicitud cancelada correctamente." });
   } catch (error) {
-    console.error("❌ Error al cancelar solicitud:", error);
+    console.error("Error al cancelar solicitud:", error);
     res.status(500).json({ message: "Error al cancelar la solicitud." });
   }
 };

@@ -9,6 +9,7 @@ import {
 
 const router = express.Router();
 
+// Rutas generales para negociaciones
 router.post('/crear', crearNegociacion);
 router.put('/actualizar/:idNegociacion', actualizarNegociacion);
 router.put('/pactar/:idNegociacion', pactarNegociacion);

@@ -13,7 +13,7 @@ const RPC_SERVER = "HTTP://127.0.0.1:7545";
 // Conexión con Ganache
 const web3 = new Web3(new Web3.providers.HttpProvider(RPC_SERVER));
 
-// Clave privada (¡solo para pruebas locales!)
+// Clave privada 
 const PRIVATE_KEY = "0x0b814737bcaab9a2e62b6219928b3a6c0b767c88d95cffa7cbe46deeda57345e";
 
 // Obtiene la cuenta asociada
@@ -21,6 +21,6 @@ const account = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
 
-console.log("🔗 Conectado a Ganache con la cuenta:", account.address);
+console.log("Conectado a Ganache con la cuenta:", account.address);
 
 export { web3, account };

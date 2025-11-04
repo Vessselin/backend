@@ -24,14 +24,14 @@ app.use("/api/negociaciones-transportista", negociacionesTransportistaRoutes);
 app.use("/api/negociaciones-cliente", negociacionesClienteRoutes);
 app.use("/api/blockchain", blockchainRoutes);
 
-// 🔍 Log para confirmar las rutas activas
+// Log para confirmar las rutas activas
 app.use((req, res, next) => {
-  console.log(`📡 Petición recibida: ${req.method} ${req.originalUrl}`);
+  console.log(`Petición recibida: ${req.method} ${req.originalUrl}`);
   next();
 });
 
-app.get('/', (req, res) => res.send('✅ Servidor activo'));
+app.get('/', (req, res) => res.send('Servidor activo'));
 
-console.log("🔗 Rutas cargadas: /api/usuarios, /api/auth, /api/solicitudes, /api/ofertas");
+console.log("Rutas cargadas: /api/usuarios, /api/auth, /api/solicitudes, /api/ofertas");
 
 export default app;

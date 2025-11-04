@@ -8,16 +8,10 @@ import {
 
 const router = express.Router();
 
-// Ver todas las solicitudes disponibles para ofertar
+// Rutas para la gestión de ofertas
 router.get('/solicitudes-disponibles', obtenerSolicitudesDisponibles);
-
-// Crear una nueva oferta o contraoferta
 router.post('/crear', crearOferta);
-
-// Aceptar una oferta existente
 router.put('/aceptar/:idOferta', aceptarOferta);
-
-// Ver las ofertas que ha hecho un transportista
 router.get('/mis-ofertas/:idTransportista', listarOfertasPorTransportista);
 
 export default router;
