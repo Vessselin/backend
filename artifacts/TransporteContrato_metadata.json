@@ -6,8 +6,77 @@
 	"output": {
 		"abi": [
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "idContrato",
+						"type": "uint256"
+					}
+				],
+				"name": "ContratoCompletado",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "idContrato",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "idCliente",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "idTransportista",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "costo",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "origen",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "destino",
+						"type": "string"
+					}
+				],
+				"name": "ContratoCreado",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_idContrato",
+						"type": "uint256"
+					}
+				],
+				"name": "completarContrato",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
-				"name": "contador",
+				"name": "contadorContratos",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -29,34 +98,54 @@
 				"name": "contratos",
 				"outputs": [
 					{
-						"internalType": "address",
-						"name": "cliente",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "idContrato",
+						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "transportista",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "idCliente",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "idTransportista",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
-						"name": "descripcion",
+						"name": "origen",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "destino",
 						"type": "string"
 					},
 					{
 						"internalType": "uint256",
-						"name": "peso",
+						"name": "distancia",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
+						"name": "costo",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
 						"name": "fechaInicio",
-						"type": "uint256"
+						"type": "string"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "fechaEntrega",
-						"type": "uint256"
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "condiciones",
+						"type": "string"
 					},
 					{
 						"internalType": "bool",
@@ -70,34 +159,49 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_cliente",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "_idCliente",
+						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "_transportista",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "_idTransportista",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
-						"name": "_descripcion",
+						"name": "_origen",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_destino",
 						"type": "string"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_peso",
+						"name": "_distancia",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
+						"name": "_costo",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
 						"name": "_fechaInicio",
-						"type": "uint256"
+						"type": "string"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "string",
 						"name": "_fechaEntrega",
-						"type": "uint256"
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_condiciones",
+						"type": "string"
 					}
 				],
 				"name": "crearContrato",
@@ -109,13 +213,69 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_id",
+						"name": "_idContrato",
 						"type": "uint256"
 					}
 				],
-				"name": "marcarCompletado",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "obtenerContrato",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -132,7 +292,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"TransporteContrato.sol": "TransporteContrato"
+			"src/contracts/TransporteContrato.sol": "TransporteContrato"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -146,11 +306,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"TransporteContrato.sol": {
-			"keccak256": "0x1b67380e85a15f39d23f595710042724aacdca53173a1bc4afa2bd7b9eaae71d",
+		"src/contracts/TransporteContrato.sol": {
+			"keccak256": "0xdfdae6b6d1ac56b436e343a5077b1c81a9f7382b539646a8c9d546eed1d3d218",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://3f79833a56deb5bf8eb6064fa02ad2c44342f0ad63b499d7b305a3768f92a951",
-				"dweb:/ipfs/QmV1HTiSanVbgamVn6FuC381gKKv4iGmXC6E1ppi4bKkup"
+				"bzz-raw://9773ebc382964b11136174abe2d0ad0a313eeb7a9caac44589c247d0f512b861",
+				"dweb:/ipfs/QmNfUC9FPpcdXuSW8tK49kAb1AdrQdFGhgiooWdtyaAbnf"
 			]
 		}
 	},

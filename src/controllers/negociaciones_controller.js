@@ -31,7 +31,7 @@ export const crearNegociacion = async (req, res) => {
     // Cambiar estado de la carga a "negociando"
     await connection.execute(
       `UPDATE solicitud_carga SET estado_carga = 'negociando' WHERE idSolicitud_Carga = ? AND estado_carga = 'disponible'`,
-      [idSolicitud_Carga]
+      [idTransportista || null, idSolicitud_Carga]
     );
 
     return res.status(201).json({
@@ -89,7 +89,7 @@ export const actualizarNegociacion = async (req, res) => {
 // Pactar negociación (aceptar y cerrar carga)
 export const pactarNegociacion = async (req, res) => {
   const idNegociacion = req.params.idNegociacion;
-  const { idSolicitud_Carga, idTransportista } = req.body;
+  const { idSolicitud_Carga } = req.body;
 
   if (!idNegociacion || !idSolicitud_Carga) {
     return res.status(400).json({ error: "Faltan idNegociacion o idSolicitud_Carga" });
@@ -98,45 +98,118 @@ export const pactarNegociacion = async (req, res) => {
   try {
     await connection.beginTransaction();
 
-    await connection.execute(
-      `UPDATE negociacion SET estado = 'Pactado', fecha_actualizacion = NOW() WHERE idNegociacion = ?`,
+    // 🔹 Obtener la negociación con su monto
+    const [[negociacion]] = await connection.execute(
+      `SELECT idTransportista, idCliente, monto 
+       FROM negociacion 
+       WHERE idNegociacion = ?`,
       [idNegociacion]
     );
 
+    if (!negociacion) {
+      throw new Error("No se encontró la negociación indicada");
+    }
+
+    // 🔹 Obtener la solicitud
+    const [[solicitud]] = await connection.execute(
+      `SELECT idTransportista, estado_carga 
+       FROM solicitud_carga 
+       WHERE idSolicitud_Carga = ?`,
+      [idSolicitud_Carga]
+    );
+
+    if (!solicitud) {
+      throw new Error("No se encontró la solicitud de carga");
+    }
+
+    // 🔹 Verificar si ya fue cerrada por otro transportista
+    if (solicitud.estado_carga === "cerrado" && solicitud.idTransportista !== negociacion.idTransportista) {
+      await connection.rollback();
+      return res.status(409).json({
+        success: false,
+        message: "❌ Esta carga ya fue tomada por otro transportista.",
+      });
+    }
+
+    // 🔹 Marcar la negociación ganadora
     await connection.execute(
-      `UPDATE negociacion SET estado = 'Cancelado', fecha_actualizacion = NOW() WHERE idSolicitud_Carga = ? AND idNegociacion != ?`,
+      `UPDATE negociacion 
+       SET estado = 'Pactado', fecha_actualizacion = NOW() 
+       WHERE idNegociacion = ?`,
+      [idNegociacion]
+    );
+
+    // 🔹 Cancelar las demás negociaciones
+    await connection.execute(
+      `UPDATE negociacion 
+       SET estado = 'Cancelado', fecha_actualizacion = NOW() 
+       WHERE idSolicitud_Carga = ? AND idNegociacion != ?`,
       [idSolicitud_Carga, idNegociacion]
     );
 
+    // 🔹 Cerrar la solicitud y asignar transportista
     await connection.execute(
-      `UPDATE solicitud_carga SET estado_carga = 'cerrado' WHERE idSolicitud_Carga = ?`,
-      [idSolicitud_Carga]
+      `UPDATE solicitud_carga 
+       SET estado_carga = 'cerrado', idTransportista = ? 
+       WHERE idSolicitud_Carga = ?`,
+      [negociacion.idTransportista, idSolicitud_Carga]
+    );
+
+    // 🔹 Actualizar el precio final en la tabla precio_carga
+    await connection.execute(
+      `UPDATE precio_carga 
+       SET precio_final = ? 
+       WHERE idSolicitud_Carga = ?`,
+      [negociacion.monto, idSolicitud_Carga]
     );
 
     await connection.commit();
 
     return res.json({
       success: true,
-      message: "Negociación pactada correctamente"
+      message: "✅ Negociación pactada correctamente. Procede a la firma del contrato.",
+      idCliente: negociacion.idCliente,
+      idTransportista: negociacion.idTransportista,
+      precio_final: negociacion.monto
     });
   } catch (err) {
     console.error("❌ Error al pactar negociación:", err);
-    try { await connection.rollback(); } catch (e) { console.error("rollback error:", e); }
+    try {
+      await connection.rollback();
+    } catch (e) {
+      console.error("rollback error:", e);
+    }
     return res.status(500).json({ error: "Error al pactar negociación" });
   }
 };
+
 
 // Obtener negociaciones por carga
 export const obtenerNegociacionesPorCarga = async (req, res) => {
   try {
     const { idSolicitud_Carga } = req.params;
     const sql = `
-      SELECT n.*, u.nombre AS nombreTransportista
+      SELECT 
+        n.idNegociacion,
+        n.idSolicitud_Carga,
+        n.monto,
+        n.estado,
+        n.fecha_actualizacion,
+        s.descripcion,
+        s.origen,
+        s.destino,
+        s.peso,
+        s.distancia_km,
+        s.estado_carga,
+        p.precio_min,
+        p.precio_max
       FROM negociacion n
-      LEFT JOIN usuario u ON n.idTransportista = u.idUsuario
+      JOIN solicitud_carga s ON n.idSolicitud_Carga = s.idSolicitud_Carga
+      JOIN precio_carga p ON p.idSolicitud_Carga = s.idSolicitud_Carga
       WHERE n.idSolicitud_Carga = ?
-      ORDER BY n.fecha_inicio DESC
+      ORDER BY n.fecha_actualizacion DESC
     `;
+
     const [rows] = await connection.execute(sql, [idSolicitud_Carga]);
     return res.json(rows);
   } catch (err) {
@@ -154,8 +227,7 @@ export const obtenerNegociacionesPorTransportista = async (req, res) => {
       SELECT 
         n.idNegociacion,
         n.idSolicitud_Carga,
-        n.monto_cliente,
-        n.monto_transportista,
+        n.monto,
         n.estado,
         n.fecha_actualizacion,
         s.descripcion,
@@ -163,12 +235,15 @@ export const obtenerNegociacionesPorTransportista = async (req, res) => {
         s.destino,
         s.peso,
         s.distancia_km,
-        s.estado_carga
+        s.estado_carga,
+        p.precio_min,
+        p.precio_max
       FROM negociacion n
       JOIN solicitud_carga s ON n.idSolicitud_Carga = s.idSolicitud_Carga
+      JOIN precio_carga p ON p.idSolicitud_Carga = s.idSolicitud_Carga
       WHERE n.idTransportista = ?
-      ORDER BY n.fecha_actualizacion DESC
     `;
+
 
     const [rows] = await connection.execute(sql, [idTransportista]);
     res.json(rows);
@@ -185,7 +260,7 @@ export const enviarContraoferta = async (req, res) => {
 
     const sql = `
       UPDATE negociacion 
-      SET monto_transportista = ?, estado = 'Oferta_Transportista', fecha_actualizacion = NOW()
+      SET monto = ?, estado = 'Oferta_Transportista', fecha_actualizacion = NOW()
       WHERE idNegociacion = ?
     `;
     await connection.execute(sql, [nuevoMonto, idNegociacion]);
@@ -225,8 +300,7 @@ export const obtenerNegociacionesPorCliente = async (req, res) => {
       SELECT 
         n.idNegociacion,
         n.idSolicitud_Carga,
-        n.monto_cliente,
-        n.monto_transportista,
+        n.monto,
         n.estado,
         n.fecha_actualizacion,
         s.descripcion,
@@ -234,12 +308,15 @@ export const obtenerNegociacionesPorCliente = async (req, res) => {
         s.destino,
         s.peso,
         s.distancia_km,
-        s.estado_carga
+        s.estado_carga,
+        p.precio_min,
+        p.precio_max
       FROM negociacion n
       JOIN solicitud_carga s ON n.idSolicitud_Carga = s.idSolicitud_Carga
+      JOIN precio_carga p ON p.idSolicitud_Carga = s.idSolicitud_Carga
       WHERE n.idCliente = ?
-      ORDER BY n.fecha_actualizacion DESC
     `;
+
 
     const [rows] = await connection.execute(sql, [idCliente]);
     res.json(rows);
@@ -256,7 +333,7 @@ export const enviarContraofertaCliente = async (req, res) => {
 
     const sql = `
       UPDATE negociacion 
-      SET monto_cliente = ?, estado = 'Oferta_Cliente', fecha_actualizacion = NOW()
+      SET monto = ?, estado = 'Oferta_Cliente', fecha_actualizacion = NOW()
       WHERE idNegociacion = ?
     `;
     await connection.execute(sql, [nuevoMonto, idNegociacion]);

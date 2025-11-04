@@ -7,6 +7,7 @@ import ofertasRoutes from './routes/ofertas_routes.js';
 import negociacionesRoutes from './routes/negociaciones_routes.js';
 import negociacionesTransportistaRoutes from "./routes/negociaciones_transportista_routes.js";
 import negociacionesClienteRoutes from "./routes/negociaciones_clientes_routes.js";
+import blockchainRoutes from "./routes/blockchain_routes.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/ofertas', ofertasRoutes);
 app.use('/api/negociaciones', negociacionesRoutes);
 app.use("/api/negociaciones-transportista", negociacionesTransportistaRoutes);
 app.use("/api/negociaciones-cliente", negociacionesClienteRoutes);
+app.use("/api/blockchain", blockchainRoutes);
 
 // 🔍 Log para confirmar las rutas activas
 app.use((req, res, next) => {

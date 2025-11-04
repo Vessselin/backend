@@ -14,15 +14,17 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "ethers": "^6.15.0",
     "express": "^5.1.0",
+    "fs-extra": "^11.3.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.2",
     "sequelize": "^6.37.7",
+    "solc": "^0.8.0",
     "web3": "^4.16.0"
   },
   "devDependencies": {
+    "dotenv": "^17.2.3",
+    "ethers": "^6.15.0",
     "nodemon": "^3.1.10"
   },
   "type": "module"
